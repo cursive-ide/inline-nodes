@@ -1,5 +1,6 @@
 (ns cursive.inline.scope-capture
   (:require [cursive.inline.nodes :refer :all]
+            [sc.api :as api]
             [sc.impl :as i]))
 
 ; There is a problem with this at the moment. The vars are interned into `*ns*`, which means
@@ -22,7 +23,7 @@
   (title-node "Execution points"
     (let [ids (keys (:execution-points @sc.impl.db/db))]
       (reduce (fn [ret ep-id]
-                (let [info (sc.api/ep-info ep-id)
+                (let [info (api/ep-info ep-id)
                       {:keys [:sc.ep/code-site]} info
                       {:keys [:sc.cs/file :sc.cs/line :sc.cs/column]} code-site]
                   (into ret
