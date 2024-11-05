@@ -155,9 +155,10 @@ the tagged literal to it. Here's an example from the tutorial:
          :var          'cursive.tutorials.inline.a-start-here/print-it}))
 ```
 
-The `:var` entry This will invoke the `print-it` var, and passes the whole map from the tagged literal to it.
+The `:var` entry is a symbol which should resolve to the var to be invoked. This example will 
+invoke the `print-it` var, and passes the whole map from the tagged literal to it.
 In this case, all the data is related to the representation of the node itself, but you can
-put whatever you want in there, IDs, paths to data, etc. Here's an example from the Scope
+put whatever you want in there: IDs, paths to data, etc. Here's an example from the Scope
 Capture functions, which passes an ID for the var to operate on:
 
 ```clojure
