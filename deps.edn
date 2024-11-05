@@ -1,0 +1,2 @@
+{:deps {metosin/malli              {:mvn/version "0.16.3"}
+        vvvvalvalval/scope-capture {:mvn/version "0.3.3"}}}
