@@ -24,25 +24,28 @@
     (let [ids (keys (:execution-points @sc.impl.db/db))]
       (reduce (fn [ret ep-id]
                 (let [info (api/ep-info ep-id)
-                      {:keys [:sc.ep/code-site]} info
+                      {:keys [:sc.ep/code-site :sc.ep/value]} info
                       {:keys [:sc.cs/file :sc.cs/line :sc.cs/column]} code-site]
-                  (into ret
-                        [(labeled-forms "Info: " info)
-                         (node {:presentation [{:text  "Take me!"
-                                                :color :link}
-                                               {:text  (str " "
-                                                            file
-                                                            ":"
-                                                            line)
-                                                :color :inactive}]
-                                :action       :navigate
-                                :file         file
-                                :line         line
-                                :column       column})
-                         (node {:presentation [{:text  "Def them all!"
-                                                :color :link}]
-                                :action       :eval
-                                :var          'cursive.inline.scope-capture/defsc
-                                :ep-id        ep-id})])))
+                  (conj ret
+                        (title-node (str "Execution Point " ep-id)
+                           (title-node "Info: " info)
+                           (when value
+                             (title-node "Return value: " value))
+                           (node {:presentation [{:text  "Jump to capture location"
+                                                  :color :link}
+                                                 {:text  (str " "
+                                                              file
+                                                              ":"
+                                                              line)
+                                                  :color :inactive}]
+                                  :action       :navigate
+                                  :file         file
+                                  :line         line
+                                  :column       column})
+                           (node {:presentation [{:text  "Def all captured vars"
+                                                  :color :link}]
+                                  :action       :eval
+                                  :var          'cursive.inline.scope-capture/defsc
+                                  :ep-id        ep-id})))))
               []
               (reverse ids)))))

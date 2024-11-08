@@ -30,7 +30,7 @@
   (if-let [-format (some (methods -format) (-hierarchy (class e)))]
     (-format e data)
     (node {:presentation [{:text  "Unknown Error"
-                           :style :error}]}
+                           :color :error}]}
           (node {:presentation [{:text "Type: "}
                                 {:form (type e)}]})
           (node {:presentation [{:text "Message: "}
@@ -45,9 +45,9 @@
 
 (defmethod -format ::m/explain [_ {:keys [schema] :as explanation}]
   (title-node "Explain"
-    (labeled-forms "Value: " (me/error-value explanation))
-    (apply labeled-forms "Errors: " (me/humanize (me/with-spell-checking explanation)))
-    (labeled-forms "Schema: " schema)
+    (title-node "Value: " (me/error-value explanation))
+    (title-node "Errors: " (me/humanize (me/with-spell-checking explanation)))
+    (title-node "Schema: " schema)
     (link-node "More information" "https://cljdoc.org/d/metosin/malli/CURRENT")))
 
 (defmethod -format ::m/coercion [_ {:keys [explain]}]
@@ -55,34 +55,34 @@
 
 (defmethod -format ::m/invalid-input [_ {:keys [args input fn-name]}]
   (title-node "Invalid Function Input"
-    (apply labeled-forms "Invalid function arguments: " args)
-    (when fn-name (labeled-forms "Function Var: " fn-name))
-    (labeled-forms "Input Schema: " input)
-    (apply labeled-forms "Errors: " (-explain input args))
+    (apply title-node "Invalid function arguments: " args)
+    (when fn-name (title-node "Function Var: " fn-name))
+    (title-node "Input Schema: " input)
+    (title-node "Errors: " (-explain input args))
     (link-node "More information" "https://cljdoc.org/d/metosin/malli/CURRENT/doc/function-schemas")))
 
 (defmethod -format ::m/invalid-output [_ {:keys [value args output fn-name]}]
   (title-node "Invalid Function Output"
-    (labeled-forms "Invalid function return value: " value)
-    (when fn-name (labeled-forms "Function Var: " fn-name))
-    (apply labeled-forms "Function arguments: " args)
-    (labeled-forms "Output Schema: " output)
-    (apply labeled-forms "Errors: " (-explain output value))
+    (title-node "Invalid function return value: " value)
+    (when fn-name (title-node "Function Var: " fn-name))
+    (apply title-node "Function arguments: " args)
+    (title-node "Output Schema: " output)
+    (title-node "Errors: " (-explain output value))
     (link-node "More information" "https://cljdoc.org/d/metosin/malli/CURRENT/doc/function-schemas")))
 
 (defmethod -format ::m/invalid-guard [_ {:keys [value args guard fn-name]}]
   (title-node "Function Guard Error"
-    (when fn-name (labeled-forms "Function Var: " fn-name))
-    (labeled-forms "Guard arguments: " [args value])
-    (labeled-forms "Guard schema: " guard)
-    (apply labeled-forms "Errors: " (-explain guard [args value]))
+    (when fn-name (title-node "Function Var: " fn-name))
+    (title-node "Guard arguments: " args value)
+    (title-node "Guard schema: " guard)
+    (title-node "Errors: " (-explain guard [args value]))
     (link-node "More information" "https://cljdoc.org/d/metosin/malli/CURRENT/doc/function-schemas")))
 
 (defmethod -format ::m/invalid-arity [_ {:keys [args arity schema fn-name]}]
   (title-node "Invalid Function Arity"
-    (apply labeled-forms (str "Invalid function arity (" arity "): ") args)
-    (labeled-forms "Function Schema: " schema)
-    (when fn-name (labeled-forms "Function Var: " fn-name))
+    (apply title-node (str "Invalid function arity (" arity "): ") args)
+    (title-node "Function Schema: " schema)
+    (when fn-name (title-node "Function Var: " fn-name))
     (link-node "More information" "https://cljdoc.org/d/metosin/malli/CURRENT/doc/function-schemas")))
 
 (defmethod -format ::m/child-error [_ {:keys [type children properties] :as data}]
@@ -90,8 +90,8 @@
         constraints (reduce (fn [acc k] (if-let [v (get data k)] (assoc acc k v) acc)) nil [:min :max])
         size (count children)]
     (title-node "Schema Creation Error"
-      (labeled-forms "Invalid Schema " form)
-      (title-node "Reason" {:auto-expand? true}
+      (title-node "Invalid Schema " form)
+      (title-node "Reason"
         (node {:presentation [{:text (str "Schema has " size
                                           (if (= 1 size) " child" " children")
                                           ", expected: ")}
