@@ -9,7 +9,7 @@
             [malli.core :as m]
             [malli.error :as me]))
 
-; We also duplicate slightly modified versions of some Malli internal functions here:
+; We duplicate slightly modified versions of some Malli internal functions here:
 
 (defn -errors [explanation]
   (for [error (->> explanation (me/with-error-messages) :errors)]
@@ -40,7 +40,9 @@
             (node {:presentation [{:text "Ex-data: "}]}
                   data)))))
 
-(defn format [e]
+(defn format
+  "Format a Malli exception for inline viewing in Cursive."
+  [e]
   (-format e (-> e (ex-data) :data)))
 
 (defmethod -format ::m/explain [_ {:keys [schema] :as explanation}]
